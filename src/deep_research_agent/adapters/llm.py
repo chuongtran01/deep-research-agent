@@ -92,3 +92,7 @@ class LLM(BaseModel):
             )
 
         return out
+
+    @property
+    def model_name(self) -> str:
+        return self._model_name
