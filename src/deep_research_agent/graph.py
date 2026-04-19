@@ -23,6 +23,5 @@ def build_graph():
     graph.add_edge("planner", "search_router")
 
     graph.add_edge("web_search", "content_fetcher")
-    graph.add_edge("content_fetcher", "search_router")
 
     return graph.compile()
