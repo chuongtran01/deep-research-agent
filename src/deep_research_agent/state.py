@@ -3,6 +3,7 @@ from typing import Annotated, Any, TypedDict, Literal
 from pydantic import BaseModel
 
 from src.deep_research_agent.schemas.evidence import EvidenceItem
+from langgraph.graph import add_messages
 
 
 class TaskModel(BaseModel):
@@ -39,5 +40,6 @@ class AgentState(TypedDict, total=False):
     evidence_items: Annotated[list[EvidenceItem],
                               "Extracted evidence items from the search results"]
 
-    summary: Annotated[str, "Running log of planner and tool outcomes"]
+    summary: Annotated[list[str],
+                       "Running log of planner and tool outcomes", add_messages]
     final_answer: Annotated[str, "User-facing message when the graph stops"]

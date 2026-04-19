@@ -11,8 +11,8 @@ def build_graph():
 
     graph.add_node("planner", planner_node)
     graph.add_node("question_analyzer", question_analyzer_node)
-    graph.add_node("web_search", web_search_node)
     graph.add_node("search_router", search_router_node)
+    graph.add_node("web_search", web_search_node)
 
     graph.add_edge(START, "question_analyzer")
     graph.add_edge("question_analyzer", "planner")

@@ -14,7 +14,7 @@ def question_analyzer_node(state: AgentState) -> AgentState:
 
     if not query:
         return {
-            "summary": "Question analyzer received an empty query.",
+            "summary": ["Question analyzer received an empty query."],
             "final_answer": "I could not analyze the question because no query was provided.",
         }
 
@@ -31,12 +31,12 @@ def question_analyzer_node(state: AgentState) -> AgentState:
         result: AnalyzerOutput = llm.structured_chat(prompt)
     except ValidationError as e:
         return {
-            "summary": f"Question analyzer output validation failed: {e}",
+            "summary": [f"Question analyzer output validation failed: {e}"],
             "final_answer": "I failed to analyze the question due to a validation error.",
         }
     except Exception as e:
         return {
-            "summary": f"Question analyzer failed: {e}",
+            "summary": [f"Question analyzer failed: {e}"],
             "final_answer": "I failed to analyze the question due to an error.",
         }
 
@@ -55,5 +55,5 @@ def question_analyzer_node(state: AgentState) -> AgentState:
         "ambiguities": result.ambiguities,
         "time_sensitivity": result.time_sensitivity,
         "preferred_source_types": result.preferred_source_types,
-        "summary": analyzer_summary,
+        "summary": [analyzer_summary],
     }

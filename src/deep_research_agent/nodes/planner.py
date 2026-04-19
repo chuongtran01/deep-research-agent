@@ -66,7 +66,7 @@ def planner_node(state: AgentState) -> AgentState:
     if not query:
         return {
             "plan": [],
-            "summary": "Planner received an empty query.",
+            "summary": ["Planner received an empty query."],
             "pending_tasks": [],
             "current_task": None,
             "final_answer": "I could not create a research plan because no query was provided.",
@@ -92,16 +92,14 @@ def planner_node(state: AgentState) -> AgentState:
     except ValidationError as e:
         return {
             "plan": [],
-            "summary": f"Planner output validation failed: {e}",
-            "current_step_index": 0,
+            "summary": [f"Planner output validation failed: {e}"],
             "current_task": None,
             "final_answer": "I failed to create a valid research plan.",
         }
     except Exception as e:
         return {
             "plan": [],
-            "summary": f"Planner failed: {e}",
-            "current_step_index": 0,
+            "summary": [f"Planner failed: {e}"],
             "current_task": None,
             "final_answer": "I failed to create a research plan due to a planner error.",
         }
@@ -126,5 +124,5 @@ def planner_node(state: AgentState) -> AgentState:
         "research_scope": result.research_scope,
         "subtopics": result.subtopics,
         "ambiguities": result.ambiguities,
-        "summary": planner_summary,
+        "summary": [planner_summary],
     }
