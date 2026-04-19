@@ -22,13 +22,6 @@ def _has_enough_evidence(state: AgentState) -> bool:
     return len(evidence_items) >= 5
 
 
-def _append_summary(state: AgentState, message: str) -> str:
-    existing = (state.get("summary") or "").strip()
-    if not existing:
-        return message
-    return f"{existing}\n{message}"
-
-
 def search_router_node(state: AgentState) -> Command[Literal["web_search", "outline_report"]]:
     """
       Scheduler + router for the research loop.
@@ -53,10 +46,9 @@ def search_router_node(state: AgentState) -> Command[Literal["web_search", "outl
                 update={
                     "current_task": None,
                     "pending_tasks": remaining_tasks,
-                    "summary": [_append_summary(
-                        state,
+                    "summary": [
                         f"Unsupported task type '{next_task.name}'. Skipping.",
-                    )],
+                    ],
                 },
                 goto="outline_report",
             )
@@ -65,10 +57,9 @@ def search_router_node(state: AgentState) -> Command[Literal["web_search", "outl
             update={
                 "current_task": next_task,
                 "pending_tasks": remaining_tasks,
-                "summary": [_append_summary(
-                    state,
+                "summary": [
                     f"Scheduled task '{next_task.name}' for subtopic '{next_task.args.get('subtopic', '')}'.",
-                )],
+                ],
             },
             goto=node_name,
         )
@@ -79,10 +70,9 @@ def search_router_node(state: AgentState) -> Command[Literal["web_search", "outl
         if node_name is not None:
             return Command(
                 update={
-                    "summary": [_append_summary(
-                        state,
+                    "summary": [
                         f"Routing current task '{current_task.name}'.",
-                    )],
+                    ],
                 },
                 goto=node_name,
             )
@@ -90,10 +80,9 @@ def search_router_node(state: AgentState) -> Command[Literal["web_search", "outl
         return Command(
             update={
                 "current_task": None,
-                "summary": [_append_summary(
-                    state,
+                "summary": [
                     f"Unsupported current task '{current_task.name}'. Moving on.",
-                )],
+                ],
             },
             goto="outline_report",
         )
@@ -102,15 +91,13 @@ def search_router_node(state: AgentState) -> Command[Literal["web_search", "outl
     enough_evidence = _has_enough_evidence(state)
 
     if enough_evidence:
-        summary = [_append_summary(
-            state,
+        summary = [
             "Router found no pending tasks and enough evidence. Moving to outline_report.",
-        )]
+        ]
     else:
-        summary = [_append_summary(
-            state,
+        summary = [
             "Router found no pending tasks and limited evidence. Proceeding to outline_report with available evidence.",
-        )]
+        ]
 
     return Command(
         update={"summary": summary},

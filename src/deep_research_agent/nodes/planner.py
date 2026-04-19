@@ -5,7 +5,7 @@ from src.deep_research_agent.adapters.llm import LLM
 from datetime import datetime
 from pydantic import ValidationError
 
-SYSTEM_PROMPT_TEMPLATE = load_prompt("planner").strip()
+SYSTEM_PROMPT_TEMPLATE = load_prompt("planner_system").strip()
 USER_PROMPT_TEMPLATE = load_prompt("planner_user").strip()
 
 
@@ -20,6 +20,7 @@ def _planner_tasks_to_task_models(search_tasks: list[SearchTask]) -> list[TaskMo
 
     Adjust this mapping if your TaskModel differs.
     """
+
     tasks: list[TaskModel] = []
 
     for item in search_tasks:

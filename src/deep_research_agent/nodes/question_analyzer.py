@@ -5,7 +5,7 @@ from src.deep_research_agent.adapters.llm import LLM
 from datetime import datetime
 from pydantic import ValidationError
 
-SYSTEM_PROMPT_TEMPLATE = load_prompt("question_analyzer").strip()
+SYSTEM_PROMPT_TEMPLATE = load_prompt("question_analyzer_system").strip()
 USER_PROMPT_TEMPLATE = load_prompt("question_analyzer_user").strip()
 
 

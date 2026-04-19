@@ -18,7 +18,7 @@ def web_search_node(state: AgentState) -> AgentState:
     - appends normalized search payload to search_results
     - marks current task as completed
     - clears current_task so router can schedule the next one
-   """
+    """
 
     current_task = state.get("current_task")
 
