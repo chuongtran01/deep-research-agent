@@ -84,7 +84,6 @@ def planner_node(state: AgentState) -> AgentState:
         }
 
     plan = _planner_tasks_to_task_models(result.search_tasks)
-    current_task = plan[0] if plan else None
 
     planner_summary = (
         f"Normalized question: {result.normalized_question}\n"
@@ -97,13 +96,12 @@ def planner_node(state: AgentState) -> AgentState:
 
     return {
         "plan": plan,
-        "pending_tasks": plan,
-        "current_task": current_task,
+        "pending_tasks": plan.copy(),
+        "current_task": None,
         "completed_tasks": [],
         "normalized_question": result.normalized_question,
         "research_scope": result.research_scope,
         "subtopics": result.subtopics,
         "ambiguities": result.ambiguities,
         "summary": planner_summary,
-        "final_answer": "I created a research plan for your question.",
     }

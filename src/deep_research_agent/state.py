@@ -1,25 +1,35 @@
-from typing import TypedDict
+from typing import Annotated, Any, TypedDict
+
 from pydantic import BaseModel
-from typing import Any
 
 
 class TaskModel(BaseModel):
     name: str
+    description: str = ""
     args: dict[str, Any]
 
 
-class AgentState(TypedDict):
-    query: str
-    plan: list[TaskModel]
-    pending_tasks: list[TaskModel]
-    current_task: TaskModel | None
-    completed_tasks: list[TaskModel]
+class AgentState(TypedDict, total=False):
+    query: Annotated[str, "User research question"]
 
-    normalized_question: str
-    research_scope: str
-    subtopics: list[str]
-    ambiguities: list[str]
+    plan: Annotated[list[TaskModel], "Immutable blueprint of tasks to execute"]
+    pending_tasks: Annotated[list[TaskModel],
+                             "Mutable queue of tasks waiting to run"]
+    current_task: Annotated[TaskModel | None,
+                            "Task selected for execution by the scheduler"]
+    completed_tasks: Annotated[list[TaskModel],
+                               "Tasks finished in chronological order"]
+    current_step_index: Annotated[int,
+                                  "Progress index for plan execution or error recovery"]
 
-    search_results: list[Any]
-    summary: str
-    final_answer: str
+    normalized_question: Annotated[str, "Planner-clarified working question"]
+    research_scope: Annotated[str,
+                              "Intended breadth and depth of the investigation"]
+    subtopics: Annotated[list[str], "Major themes the plan must address"]
+    ambiguities: Annotated[list[str],
+                           "Uncertainties or missing context flagged by the planner"]
+
+    search_results: Annotated[list[Any],
+                              "Raw retrieval payloads from search and fetch tools"]
+    summary: Annotated[str, "Running log of planner and tool outcomes"]
+    final_answer: Annotated[str, "User-facing message when the graph stops"]
