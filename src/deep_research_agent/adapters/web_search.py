@@ -15,6 +15,8 @@ class SearchResult(BaseModel):
     url: Annotated[str, Field(description="The URL of the result")]
     content: Annotated[str, Field(description="The content of the result")]
     score: Annotated[float, Field(description="The score of the result")]
+    raw_content: Annotated[str, Field(
+        description="The raw content of the result")]
 
 
 class SearchToolArgs(BaseModel):
@@ -66,3 +68,11 @@ class SearchTool(BaseTool):
         )
 
         return [SearchResult(**r).model_dump() for r in response["results"]]
+
+    def search(self, query: str,
+               max_results: int = 5,
+               include_raw_content: bool = False,
+               search_depth: Literal["basic", "advanced",
+                                     "fast", "ultra-fast"] = "basic"
+               ) -> List[SearchResult]:
+        return self._run(query=query, max_results=max_results, include_raw_content=include_raw_content, search_depth=search_depth)
