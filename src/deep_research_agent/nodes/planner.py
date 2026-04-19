@@ -5,9 +5,6 @@ from src.deep_research_agent.adapters.llm import LLM
 from datetime import datetime
 from pydantic import ValidationError
 
-SYSTEM_PROMPT_TEMPLATE = load_prompt("planner").strip()
-USER_PROMPT_TEMPLATE = load_prompt("planner_user").strip()
-
 
 def _planner_tasks_to_task_models(search_tasks: list[SearchTask]) -> list[TaskModel]:
     """
@@ -67,11 +64,13 @@ def planner_node(state: AgentState) -> AgentState:
             "final_answer": "I could not create a research plan because no query was provided.",
         }
 
+    SYSTEM_PROMPT_TEMPLATE = load_prompt("planner").strip()
     llm = LLM(
         structured_output=PlannerOutput,
         system_prompt=SYSTEM_PROMPT_TEMPLATE,
     )
 
+    USER_PROMPT_TEMPLATE = load_prompt("planner_user").strip()
     prompt = USER_PROMPT_TEMPLATE.format(
         query=query,
         current_date=datetime.now().strftime("%Y-%m-%d")
