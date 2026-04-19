@@ -43,6 +43,19 @@ def _planner_tasks_to_task_models(search_tasks: list[SearchTask]) -> list[TaskMo
 
 
 def planner_node(state: AgentState) -> AgentState:
+    """
+    Plan the user's research question into structured search tasks.
+
+    Expected AgentState inputs:
+    - query: str
+
+    Returns state updates for:
+    - plan: list[TaskModel]
+    - summary: str   (optional planning summary for debugging / downstream context)
+    - pending_tasks: list[TaskModel]
+    - current_task: TaskModel | None
+    """
+
     query = state["query"]
 
     if not query:
