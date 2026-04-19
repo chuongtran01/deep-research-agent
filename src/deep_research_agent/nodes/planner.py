@@ -57,6 +57,8 @@ def planner_node(state: AgentState) -> AgentState:
     - current_task: TaskModel | None
     """
 
+    print("Planner node called")
+
     query = (state.get("query") or "").strip()
     normalized_question = (state.get("normalized_question") or query).strip()
     research_scope = (state.get("research_scope") or "").strip()

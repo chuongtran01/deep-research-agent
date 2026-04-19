@@ -10,6 +10,8 @@ USER_PROMPT_TEMPLATE = load_prompt("question_analyzer_user").strip()
 
 
 def question_analyzer_node(state: AgentState) -> AgentState:
+    print("Question analyzer node called")
+
     query = state["query"]
 
     if not query:

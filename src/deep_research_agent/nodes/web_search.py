@@ -1,5 +1,5 @@
 from src.deep_research_agent.state import AgentState
-from src.deep_research_agent.adapters.web_search import SearchTool
+from src.deep_research_agent.adapters.web_search import SearchTool, SearchResult
 from typing import Any
 
 
@@ -19,6 +19,8 @@ def web_search_node(state: AgentState) -> AgentState:
     - marks current task as completed
     - clears current_task so router can schedule the next one
     """
+
+    print("Web search node called")
 
     current_task = state.get("current_task")
 
@@ -49,8 +51,8 @@ def web_search_node(state: AgentState) -> AgentState:
 
     search = SearchTool()
     try:
-        results = search.search(
-            query=query, max_results=max_results, include_raw_content=True)
+        results: list[SearchResult] = search.search(
+            query=query, max_results=max_results)
     except Exception as e:
         return {
             "completed_tasks": completed_tasks + [current_task],

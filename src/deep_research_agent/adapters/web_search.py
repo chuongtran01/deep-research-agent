@@ -1,6 +1,6 @@
 
 import os
-from typing import List, Type, Annotated, Literal
+from typing import List, Type, Annotated, Literal, Union
 
 from dotenv import load_dotenv
 from tavily import TavilyClient
@@ -15,7 +15,7 @@ class SearchResult(BaseModel):
     url: Annotated[str, Field(description="The URL of the result")]
     content: Annotated[str, Field(description="The content of the result")]
     score: Annotated[float, Field(description="The score of the result")]
-    raw_content: Annotated[str, Field(
+    raw_content: Annotated[Union[str, None], Field(
         description="The raw content of the result")]
 
 
@@ -45,7 +45,7 @@ class SearchTool(BaseTool):
 
         self._client = TavilyClient(api_key=self._api_key)
 
-    def _run(
+    def search(
         self,
         query: str,
         max_results: int = 5,
@@ -67,12 +67,12 @@ class SearchTool(BaseTool):
             search_depth=search_depth,
         )
 
-        return [SearchResult(**r).model_dump() for r in response["results"]]
+        return [SearchResult(**r) for r in response["results"]]
 
-    def search(self, query: str,
-               max_results: int = 5,
-               include_raw_content: bool = False,
-               search_depth: Literal["basic", "advanced",
-                                     "fast", "ultra-fast"] = "basic"
-               ) -> List[SearchResult]:
-        return self._run(query=query, max_results=max_results, include_raw_content=include_raw_content, search_depth=search_depth)
+    def _run(self, query: str,
+             max_results: int = 5,
+             include_raw_content: bool = False,
+             search_depth: Literal["basic", "advanced",
+                                   "fast", "ultra-fast"] = "basic"
+             ) -> List[SearchResult]:
+        return self.search(query=query, max_results=max_results, include_raw_content=include_raw_content, search_depth=search_depth)

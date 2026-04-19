@@ -39,6 +39,8 @@ class AgentState(TypedDict, total=False):
                               "Raw retrieval payloads from search and fetch tools"]
     evidence_items: Annotated[list[EvidenceItem],
                               "Extracted evidence items from the search results"]
+    fetched_documents: Annotated[list[Any],
+                                 "Batches of documents fetched from search result URLs"]
 
     summary: Annotated[list[str],
                        "Running log of planner and tool outcomes", add_messages]
