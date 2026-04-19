@@ -43,6 +43,8 @@ class EvidenceExtractorOutput(BaseModel):
 
 
 class EvidenceItem(BaseModel):
+    evidence_id: Annotated[str, Field(
+        description="Unique identifier for this evidence")]
     query: Annotated[str, Field(
         description="The search query that led to this evidence")]
     subtopic: Annotated[str, Field(description="Research subtopic")]

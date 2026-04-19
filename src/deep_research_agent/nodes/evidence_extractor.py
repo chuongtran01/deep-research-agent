@@ -73,13 +73,16 @@ def evidence_extractor_node(state: AgentState) -> AgentState:
     )
 
     new_evidence_items: list[EvidenceItem] = []
+
     processed_count = 0
     success_count = 0
+    failure_count = 0
 
     for doc in documents:
         processed_count += 1
 
         if doc.get("error") is not None:
+            failure_count += 1
             continue
 
         title = doc.get("title")
@@ -87,6 +90,7 @@ def evidence_extractor_node(state: AgentState) -> AgentState:
         text = doc.get("text")
 
         if not text:
+            failure_count += 1
             continue
 
         user_prompt = USER_PROMPT_TEMPLATE.format(
@@ -103,17 +107,21 @@ def evidence_extractor_node(state: AgentState) -> AgentState:
         try:
             result: EvidenceExtractorOutput = llm.structured_chat(user_prompt)
         except ValidationError as e:
+            failure_count += 1
             continue
         except Exception as e:
+            failure_count += 1
             continue
 
         if not result.evidence_items:
+            failure_count += 1
             continue
 
         success_count += 1
 
         for item in result.evidence_items:
             new_evidence_items.append(EvidenceItem(
+                evidence_id=f"E{len(existing_evidence) + len(new_evidence_items) + 1}",
                 query=query,
                 subtopic=subtopic or "General",
                 goal=goal or "",
@@ -131,6 +139,6 @@ def evidence_extractor_node(state: AgentState) -> AgentState:
     return {
         "evidence_items": existing_evidence + new_evidence_items,
         "summary": [
-            f"Extracted {success_count} evidence items from {processed_count} documents for query '{query}'.",
+            f"Extracted {success_count} evidence items from {processed_count} documents for query '{query}' ({failure_count} failures).",
         ],
     }
