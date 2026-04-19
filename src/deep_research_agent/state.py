@@ -1,6 +1,8 @@
-from typing import Annotated, Any, TypedDict
+from typing import Annotated, Any, TypedDict, Literal
 
 from pydantic import BaseModel
+
+from src.deep_research_agent.schemas.evidence import EvidenceItem
 
 
 class TaskModel(BaseModel):
@@ -19,8 +21,6 @@ class AgentState(TypedDict, total=False):
                             "Task selected for execution by the scheduler"]
     completed_tasks: Annotated[list[TaskModel],
                                "Tasks finished in chronological order"]
-    current_step_index: Annotated[int,
-                                  "Progress index for plan execution or error recovery"]
 
     normalized_question: Annotated[str, "Planner-clarified working question"]
     research_scope: Annotated[str,
@@ -29,7 +29,15 @@ class AgentState(TypedDict, total=False):
     ambiguities: Annotated[list[str],
                            "Uncertainties or missing context flagged by the planner"]
 
+    time_sensitivity: Annotated[Literal["high", "medium", "low"],
+                                "How sensitive the question is to recent information"]
+    preferred_source_types: Annotated[list[str],
+                                      "Likely useful source types such as government, academic, news, company, docs"]
+
     search_results: Annotated[list[Any],
                               "Raw retrieval payloads from search and fetch tools"]
+    evidence_items: Annotated[list[EvidenceItem],
+                              "Extracted evidence items from the search results"]
+
     summary: Annotated[str, "Running log of planner and tool outcomes"]
     final_answer: Annotated[str, "User-facing message when the graph stops"]

@@ -11,6 +11,7 @@ beautifulsoup4
 duckduckgo-search
 wikipedia-api
 arxiv
+tavily
 
 tenacity
 rapidfuzz
