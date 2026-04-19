@@ -24,4 +24,6 @@ def build_graph():
 
     graph.add_edge("web_search", "content_fetcher")
 
+    graph.add_edge("content_fetcher", END)
+
     return graph.compile()
