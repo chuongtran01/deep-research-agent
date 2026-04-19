@@ -4,6 +4,7 @@ from typing import Literal
 
 TASK_TO_NODE = {
     "web_search": "web_search",
+    "outline_report": "outline_report",
 }
 
 
