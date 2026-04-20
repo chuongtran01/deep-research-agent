@@ -7,6 +7,7 @@ from src.deep_research_agent.nodes.search_router import search_router_node
 from src.deep_research_agent.nodes.outline_report import outline_report_node
 from src.deep_research_agent.nodes.content_fetcher import content_fetcher_node
 from src.deep_research_agent.nodes.evidence_extractor import evidence_extractor_node
+from src.deep_research_agent.nodes.evidence_ranker import evidence_ranker_node
 
 
 def build_graph():
@@ -18,6 +19,7 @@ def build_graph():
     graph.add_node("web_search", web_search_node)
     graph.add_node("content_fetcher", content_fetcher_node)
     graph.add_node("evidence_extractor", evidence_extractor_node)
+    graph.add_node("evidence_ranker", evidence_ranker_node)
     graph.add_node("outline_report", outline_report_node)
 
     graph.add_edge(START, "question_analyzer")
@@ -26,6 +28,9 @@ def build_graph():
 
     graph.add_edge("web_search", "content_fetcher")
     graph.add_edge("content_fetcher", "evidence_extractor")
-    graph.add_edge("evidence_extractor", END)
+    graph.add_edge("evidence_extractor", "evidence_ranker")
+    graph.add_edge("evidence_ranker", "search_router")
+
+    graph.add_edge("outline_report", END)
 
     return graph.compile()

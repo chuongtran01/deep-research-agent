@@ -20,6 +20,11 @@ def content_fetcher_node(state: AgentState) -> AgentState:
         }
 
     latest_batch = search_batches[-1]
+
+    query = latest_batch.get("query")
+    subtopic = latest_batch.get("subtopic")
+    goal = latest_batch.get("goal")
+    evidence_to_collect = latest_batch.get("evidence_to_collect")
     results = latest_batch.get("results", [])
 
     fetcher = Fetcher()
@@ -49,11 +54,16 @@ def content_fetcher_node(state: AgentState) -> AgentState:
             "error": fetched.error,
         })
 
+    fetched_batch = {
+        "query": query,
+        "subtopic": subtopic,
+        "goal": goal,
+        "evidence_to_collect": evidence_to_collect,
+        "documents": documents,
+    }
+
     return {
-        "fetched_documents": existing_docs + [{
-            "query": latest_batch.get("query"),
-            "documents": documents,
-        }],
+        "fetched_documents": existing_docs + [fetched_batch],
         "summary": [
             f"Fetched {len(documents)} documents from {latest_batch.get('query')}.",
         ],

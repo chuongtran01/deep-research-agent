@@ -8,20 +8,6 @@ TASK_TO_NODE = {
 }
 
 
-def _has_enough_evidence(state: AgentState) -> bool:
-    """
-    Simple sufficiency check.
-
-    Replace this later with smarter logic based on:
-    - number of ranked evidence items
-    - subtopic coverage
-    - source diversity
-    - confidence thresholds
-    """
-    evidence_items = state.get("evidence_items", [])
-    return len(evidence_items) >= 5
-
-
 def search_router_node(state: AgentState) -> Command[Literal["web_search", "outline_report"]]:
     """
       Scheduler + router for the research loop.
@@ -34,8 +20,19 @@ def search_router_node(state: AgentState) -> Command[Literal["web_search", "outl
 
     pending_tasks = state.get("pending_tasks", [])
     current_task = state.get("current_task")
+    research_complete = state.get("research_complete", False)
 
-    # Case 1: no current task, but there is pending work -> schedule next task
+    # Case 1: Early stop if research is complete
+    if research_complete:
+        return Command(
+            update={
+                "current_task": None,
+                "summary": ["Evidence is sufficient to stop research. Moving to outline_report."],
+            },
+            goto="outline_report",
+        )
+
+    # Case 2: no current task, but there is pending work -> schedule next task
     if current_task is None and pending_tasks:
         next_task = pending_tasks[0]
         remaining_tasks = pending_tasks[1:]
@@ -64,7 +61,7 @@ def search_router_node(state: AgentState) -> Command[Literal["web_search", "outl
             goto=node_name,
         )
 
-    # Case 2: Current task already exists -> route based on it
+    # Case 3: Current task already exists -> route based on it
     if current_task is not None:
         node_name = TASK_TO_NODE.get(current_task.name)
         if node_name is not None:
@@ -87,19 +84,10 @@ def search_router_node(state: AgentState) -> Command[Literal["web_search", "outl
             goto="outline_report",
         )
 
-    # Case 3: no current task and no pending tasks -> decide whether to write report
-    enough_evidence = _has_enough_evidence(state)
-
-    if enough_evidence:
-        summary = [
-            "Router found no pending tasks and enough evidence. Moving to outline_report.",
-        ]
-    else:
-        summary = [
-            "Router found no pending tasks and limited evidence. Proceeding to outline_report with available evidence.",
-        ]
-
     return Command(
-        update={"summary": summary},
+        update={
+            "current_task": None,
+            "summary": ["Router found no pending tasks and no current task. Moving to outline_report."],
+        },
         goto="outline_report",
     )

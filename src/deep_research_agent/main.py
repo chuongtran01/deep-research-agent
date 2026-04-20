@@ -22,6 +22,9 @@ if __name__ == "__main__":
                 "fetched_documents": [],
                 "summary": [],
                 "final_answer": ""
+            },
+            config={
+                "recursion_limit": 100,
             }
         )
         print("Result:", result)

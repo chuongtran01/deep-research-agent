@@ -42,6 +42,13 @@ class AgentState(TypedDict, total=False):
     fetched_documents: Annotated[list[Any],
                                  "Batches of documents fetched from search result URLs"]
 
+    ranked_evidence_items: Annotated[list[EvidenceItem],
+                                     "Evidence items retained after ranking/filtering"]
+    research_complete: Annotated[bool,
+                                 "Whether evidence is sufficient to stop research"]
+    missing_subtopics: Annotated[list[str],
+                                 "Subtopics still lacking strong evidence"]
+
     summary: Annotated[list[str],
                        "Running log of planner and tool outcomes", add_messages]
     final_answer: Annotated[str, "User-facing message when the graph stops"]
