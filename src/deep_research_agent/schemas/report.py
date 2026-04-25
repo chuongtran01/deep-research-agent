@@ -29,13 +29,3 @@ class ReportOutlineOutput(BaseModel):
                         Field(description="Report sections")]
     limitations: Annotated[list[str], Field(
         description="Evidence gaps or caveats")]
-
-
-class ReportClaim(BaseModel):
-    text: str
-    citation_ids: list[str]
-
-
-class ReportSection(BaseModel):
-    heading: str
-    claims: list[ReportClaim]
