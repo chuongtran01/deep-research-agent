@@ -7,6 +7,7 @@ from langgraph.graph import add_messages
 from src.deep_research_agent.schemas.report import ReportOutlineOutput
 from src.deep_research_agent.schemas.writer import ReportWriterOutput
 from src.deep_research_agent.schemas.citation_check import CitationCheckResult
+from src.deep_research_agent.schemas.report_review import ReportReviewOutput
 
 
 class TaskModel(BaseModel):
@@ -60,6 +61,11 @@ class AgentState(TypedDict, total=False):
                               "Validation of citation usage in draft report"]
     citation_check_passed: Annotated[bool,
                                      "Whether the citation check passed"]
+
+    review_result: Annotated[ReportReviewOutput,
+                             "Review result of the draft report"]
+    review_passed: Annotated[bool,
+                             "Whether the review passed"]
 
     summary: Annotated[list[str],
                        "Running log of planner and tool outcomes", add_messages]
