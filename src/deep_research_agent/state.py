@@ -6,6 +6,7 @@ from src.deep_research_agent.schemas.evidence import EvidenceItem
 from langgraph.graph import add_messages
 from src.deep_research_agent.schemas.report import ReportOutlineOutput
 from src.deep_research_agent.schemas.writer import ReportWriterOutput
+from src.deep_research_agent.schemas.citation_check import CitationCheckResult
 
 
 class TaskModel(BaseModel):
@@ -55,6 +56,10 @@ class AgentState(TypedDict, total=False):
                               "Outline of the report to be written"]
     draft_report: Annotated[ReportWriterOutput,
                             "Draft report generated from outline and evidence"]
+    citation_check: Annotated[CitationCheckResult,
+                              "Validation of citation usage in draft report"]
+    citation_check_passed: Annotated[bool,
+                                     "Whether the citation check passed"]
 
     summary: Annotated[list[str],
                        "Running log of planner and tool outcomes", add_messages]
