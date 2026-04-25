@@ -4,6 +4,7 @@ from pydantic import BaseModel
 
 from src.deep_research_agent.schemas.evidence import EvidenceItem
 from langgraph.graph import add_messages
+from src.deep_research_agent.schemas.report_outline import ReportOutlineOutput
 
 
 class TaskModel(BaseModel):
@@ -48,6 +49,9 @@ class AgentState(TypedDict, total=False):
                                  "Whether evidence is sufficient to stop research"]
     missing_subtopics: Annotated[list[str],
                                  "Subtopics still lacking strong evidence"]
+
+    report_outline: Annotated[ReportOutlineOutput,
+                              "Outline of the report to be written"]
 
     summary: Annotated[list[str],
                        "Running log of planner and tool outcomes", add_messages]
