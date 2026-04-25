@@ -4,7 +4,7 @@ from pydantic import BaseModel
 
 from src.deep_research_agent.schemas.evidence import EvidenceItem
 from langgraph.graph import add_messages
-from src.deep_research_agent.schemas.report_outline import ReportOutlineOutput
+from src.deep_research_agent.schemas.report import ReportOutlineOutput
 
 
 class TaskModel(BaseModel):

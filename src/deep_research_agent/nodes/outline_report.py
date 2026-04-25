@@ -1,7 +1,7 @@
 from src.deep_research_agent.state import AgentState
 from src.deep_research_agent.utils.load_prompt import load_prompt
 from src.deep_research_agent.adapters.llm import LLM
-from src.deep_research_agent.schemas.report_outline import ReportOutlineOutput
+from src.deep_research_agent.schemas.report import ReportOutlineOutput
 from pydantic import ValidationError
 import json
 
